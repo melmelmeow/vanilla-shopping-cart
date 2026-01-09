@@ -6,11 +6,61 @@ function is_logged_in() {
     return !empty($_SESSION['user_id']);
 }
 
-function current_user($pdo) {
+function current_user($pdo = null) {
     if (!is_logged_in()) return null;
-    $stmt = $pdo->prepare('SELECT id, email, name FROM users WHERE id = ?');
+    if ($pdo === null) {
+        global $pdo;
+        if (empty($pdo)) return null;
+    }
+    $stmt = $pdo->prepare('SELECT id, email, name, role FROM users WHERE id = ?');
     $stmt->execute([$_SESSION['user_id']]);
     return $stmt->fetch();
+}
+
+function is_admin() {
+    global $pdo;
+    if (!is_logged_in()) return false;
+    $user_id = $_SESSION['user_id'];
+    if (empty($pdo)) return false;
+    $stmt = $pdo->prepare('SELECT role FROM users WHERE id = ?');
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch();
+    return $user && isset($user['role']) && $user['role'] === 'admin';
+}
+
+// Admin helpers for admin login page
+function is_admin_logged_in() {
+    return !empty($_SESSION['admin_id']);
+}
+
+function current_admin($pdo = null) {
+    if (!is_admin_logged_in()) return null;
+    if ($pdo === null) {
+        global $pdo;
+        if (empty($pdo)) return null;
+    }
+    $stmt = $pdo->prepare('SELECT id, email, name FROM admin WHERE id = ?');
+    $stmt->execute([$_SESSION['admin_id']]);
+    return $stmt->fetch();
+}
+
+function admin_login($pdo = null, $email, $password) {
+    if ($pdo === null) {
+        global $pdo;
+        if (empty($pdo)) return false;
+    }
+    $stmt = $pdo->prepare('SELECT id, email, password FROM admin WHERE email = ?');
+    $stmt->execute([$email]);
+    $row = $stmt->fetch();
+    if ($row && password_verify($password, $row['password'])) {
+        $_SESSION['admin_id'] = $row['id'];
+        return true;
+    }
+    return false;
+}
+
+function admin_logout() {
+    unset($_SESSION['admin_id']);
 }
 
 function add_to_cart($product_id, $qty = 1) {

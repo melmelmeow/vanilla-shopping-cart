@@ -2,15 +2,27 @@
 require_once __DIR__ . '/../includes/functions.php';
 $pdo = $GLOBALS['pdo'];
 
-// for loading categories and products
-$cats = $pdo->query('SELECT * FROM product_categories')->fetchAll();
+// for loading categories and products (fail gracefully if tables missing)
+$dbError = null;
+try {
+  $cats = $pdo->query('SELECT * FROM product_categories')->fetchAll();
+} catch (Exception $e) {
+  $cats = [];
+  $dbError = 'Database tables not found — import `db/dump.sql` to initialize the schema.';
+}
+
 $cat_id = isset($_GET['cat']) ? (int)$_GET['cat'] : null;
-if ($cat_id) {
+try {
+  if ($cat_id) {
     $stmt = $pdo->prepare('SELECT * FROM product WHERE category_id = ?');
     $stmt->execute([$cat_id]);
     $products = $stmt->fetchAll();
-} else {
+  } else {
     $products = $pdo->query('SELECT * FROM product')->fetchAll();
+  }
+} catch (Exception $e) {
+  $products = [];
+  if (!$dbError) $dbError = 'Database tables not found — import `db/dump.sql` to initialize the schema.';
 }
 ?>
 <!doctype html>
@@ -23,6 +35,11 @@ if ($cat_id) {
 <body>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 <div class="container">
+  <?php if (!empty($dbError)): ?>
+    <div style="background:#fff3cd;border:1px solid #ffeeba;padding:12px;margin:12px 0;border-radius:4px;color:#856404;">
+      <?= htmlspecialchars($dbError) ?>
+    </div>
+  <?php endif; ?>
   <aside class="sidebar">
     <h3>Categories</h3>
     <ul>

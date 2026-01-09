@@ -1,4 +1,4 @@
-name: choya-shopping-site
+name: shopping-site
 recipe: lamp
 config:
   webroot: public
