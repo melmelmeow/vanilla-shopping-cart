@@ -2,14 +2,6 @@
 // Admin page for Simple Shop
 require_once __DIR__ . '/../../includes/functions.php';
 
-$pdo = $GLOBALS['pdo'];
-
-if (!is_logged_in() || !is_admin($pdo)) {
-    header('Location: login.php');
-    exit;
-}
-
-
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_user'])) {
@@ -69,7 +61,7 @@ $products = $pdo->query('SELECT id, name, price, description FROM product ORDER 
     </style>
 </head>
 <body>
-<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . '/../../includes/header.php'; ?>
 <div class="container">
     <main>
         <h1>Admin Panel</h1>
@@ -165,6 +157,6 @@ $products = $pdo->query('SELECT id, name, price, description FROM product ORDER 
         </section>
     </main>
 </div>
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
 </body>
 </html>
