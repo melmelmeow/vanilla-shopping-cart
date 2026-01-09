@@ -1,11 +1,11 @@
 <?php
 // Admin page for Simple Shop
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
 $pdo = $GLOBALS['pdo'];
 
 if (!is_logged_in() || !is_admin($pdo)) {
-    header('Location: /login.php');
+    header('Location: login.php');
     exit;
 }
 
