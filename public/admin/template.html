@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Untitled</title>
+<style type="text/css">
+body{
+font-family:Arial;
+ font-size:12px;
+}
+
+.navMenu {
+ background-color: #dddddd;
+ padding: 6px;
+}
+}
+
+.navMenu_header {
+ background-color: #336699;
+ color: white;
+ font-weight: bold;
+ font-size: 12px;
+ margin-bottom: 2px;
+ padding: 3px;
+ text-align: center;
+}
+
+.navMenu_element
+{
+ text-align: center;
+ background-color: #f0f0f0;
+ padding: 3px;
+ margin-bottom: 1px;
+}
+
+.navMenu_element a {
+ font-size: 11px;
+ font-weight: bold;
+ color: black
+}
+</style>
+</head>
+
+<body>
+<p><b>CRD SCRIPTS</b><br />Logged in :<b><?php echo $user_name?></b><br />
+<a href="logout.php" target="_top">logout</a>
+</p>
+<div class="navMenu">
+<table width="100%">
+<tr><td class="navMenu_header">General</td></tr>
+<tr><td class="navMenu_element"><a href="ap_info.php" target="main">Index</a></td></tr>
+ <tr><td class="navMenu_header">Category</td>
+ </tr>
+ <tr><td><a href="ap_category.php?pid=1" target="main">Add</a></td>
+ </tr>
+  <tr><td><a href="ap_scat.php?pid=2" target="main">Modify</a></td>
+ </tr>
+  <tr><td><a href="ap_scat.php?pid=3" target="main">Remove</a></td>
+ </tr>
+ 
+ <tr><td>Users</td></tr>
+ <tr><td><a href="ap_user.php?pid=1" target="main">Add</a></a></td></tr>
+ <tr><td><a href="ap_buser.php" target="main">Browse</a></td></tr>
+ 
+  <tr><td>Icons</td></tr>
+ <tr><td><a href="ap_icon.php?pid=1" target="main">Add</a></a></td></tr>
+ <tr><td><a href="ap_bicon.php" target="main">Browse</a></td></tr>
+ 
+  <tr><td>Comments</td></tr>
+ <tr><td><a href="ap_comm.php?pid=1" target="main">Add</a></a></td></tr>
+ <tr><td><a href="ap_bcomm.php" target="main">Browse</a></td></tr>
+</table>
+</div>
+
+</body>
+</html>

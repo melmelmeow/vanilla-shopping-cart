@@ -5,3 +5,5 @@ config:
 services:
   appserver:
      type: php:8.1
+  phpmyadmin:
+    type: phpmyadmin:5.2
