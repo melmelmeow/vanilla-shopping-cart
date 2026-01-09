@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ok = false;
         if (password_verify($password, $u['password'])) $ok = true;
         elseif ($password === $u['password']) {
-            $ok = true; // legacy plain text
+            $ok = true; // plain text password match, upgrade hash 
             $newHash = password_hash($password, PASSWORD_DEFAULT);
             $pdo->prepare('UPDATE users SET password = ? WHERE id = ?')->execute([$newHash, $u['id']]);
         }

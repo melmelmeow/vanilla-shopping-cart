@@ -1,1 +1,5 @@
-<footer class="site-footer"><div class="inner"><p>Simple Shop &copy; <?=date('Y')?></p></div></footer>
+<footer class="site-footer">
+    <div class="inner">
+        <p>Simple Shop &copy; <?=date('Y')?></p>
+    </div>
+</footer>

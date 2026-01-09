@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/functions.php';
 $pdo = $GLOBALS['pdo'];
-// Load categories and products
+
+// for loading categories and products
 $cats = $pdo->query('SELECT * FROM product_categories')->fetchAll();
 $cat_id = isset($_GET['cat']) ? (int)$_GET['cat'] : null;
 if ($cat_id) {

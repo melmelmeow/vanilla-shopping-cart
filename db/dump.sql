@@ -1,4 +1,4 @@
--- Minimal SQL dump for sample shopping site
+-- Mockery SQL DUMP ????
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (

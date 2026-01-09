@@ -1,8 +1,0 @@
-name: shopping-site
-recipe: lamp
-config:
-  webroot: public
-  php: '8.1'
-
-# Start with `lando start` then run `lando info` to get DB credentials.
-# You can import the DB with `lando db-import db/dump.sql`.

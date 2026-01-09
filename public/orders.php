@@ -6,10 +6,40 @@ $user_id = $_SESSION['user_id'];
 $stmt = $pdo->prepare('SELECT * FROM `order` WHERE user_id = ? ORDER BY created_at DESC');
 $stmt->execute([$user_id]);
 $orders = $stmt->fetchAll();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle order deletion (not shown in this snippet)
+    $order_id = $_POST['order_id'];
+    $stmt = $pdo->prepare('SELECT id FROM `order` WHERE id = ? AND user_id = ?');
+    $stmt->execute([$order_id, $user_id]);
+    if ($stmt->fetch()) {
+        $del_stmt = $pdo->prepare('DELETE FROM `order` WHERE id = ?');
+        $del_stmt->execute([$order_id]);
+        header('Location: /orders.php'); 
+        exit;
+    } else {
+        $error = 'Order not found or access denied.';
+    }
+}
 ?>
 <!doctype html>
 <html>
-<head><meta charset="utf-8"><title>Your Orders</title><link rel="stylesheet" href="/assets/style.css"></head>
+<head>
+    <meta charset="utf-8">
+    <title>Your Orders</title>
+    <link rel="stylesheet" href="/assets/style.css">
+    <style>
+        .error { color: red; }
+        .delete-form { display: inline; margin-left: 10px; }
+        .delete-btn { background: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        .delete-btn:hover { background: #d32f2f; }
+    </style>
+    <script>
+        function confirmDelete(orderId) {
+            return confirm('Are you sure you want to delete Order #' + orderId + '? This action cannot be undone.');
+        }
+    </script>
+</head>
 <body>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 <div class="container">
@@ -18,12 +48,23 @@ $orders = $stmt->fetchAll();
     <?php if (isset($_GET['created'])): ?>
       <p>Order #<?=htmlspecialchars($_GET['created'])?> created.</p>
     <?php endif; ?>
+    <?php if (isset($_GET['deleted'])): ?>
+      <p>Order #<?=htmlspecialchars($_GET['deleted'])?> deleted successfully.</p>
+    <?php endif; ?>
+    <?php if (isset($error)): ?>
+      <p class="error"><?=htmlspecialchars($error)?></p>
+    <?php endif; ?>
     <?php if (empty($orders)): ?>
       <p>No orders yet.</p>
     <?php else: ?>
       <ul>
         <?php foreach ($orders as $o): ?>
-          <li>Order #<?= $o['id'] ?> — <?= $o['created_at'] ?> — <?= htmlspecialchars($o['status']) ?>
+          <li>
+            Order #<?= $o['id'] ?> — <?= $o['created_at'] ?> — <?= htmlspecialchars($o['status']) ?>
+            <form class="delete-form" method="post" onsubmit="return confirmDelete(<?= $o['id'] ?>)">
+              <input type="hidden" name="order_id" value="<?= $o['id'] ?>">
+              <button type="submit" name="delete_order" class="delete-btn">Delete Order</button>
+            </form>
             <ul>
             <?php
               $s = $pdo->prepare('SELECT oi.*, p.name FROM order_items oi JOIN product p ON p.id = oi.product_id WHERE oi.order_id = ?');
